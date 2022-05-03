@@ -11,12 +11,13 @@ def parse_arguments():
     parser.add_argument("-t", dest="bot_token", type=str)
     parser.add_argument("-ch", dest="chat_id", type=str)
     parser.add_argument("-f", dest="file_path", type=str)
+    parser.add_argument("-m", dest="message", required=False, default="", type=str)
     return parser.parse_args()
 
 
-async def send_document(app, chat_id, file_path):
+async def send_document(app, chat_id, file_path, message):
     async with app:
-        await app.send_document(chat_id=chat_id, document=file_path)
+        await app.send_document(chat_id=chat_id, document=file_path, caption=message)
         print(await app.export_session_string())
 
 
@@ -29,8 +30,9 @@ if __name__ == '__main__':
     bot_token = args.bot_token
     chat_id = args.chat_id
     file_path = args.file_path
+    message = args.message
 
     app = Client(session_name, session_string=session_hash, api_id=api_id, api_hash=api_hash, bot_token=bot_token)
-    app.run(send_document(app, chat_id, file_path))
+    app.run(send_document(app, chat_id, file_path, message))
 
 

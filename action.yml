@@ -22,10 +22,14 @@ inputs:
   file-path:
     description: 'Path of the file to send'
     required: true
+  message:
+    description: 'Optional message to send with the file'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
     - uses: actions/setup-python@v3
       with:
         python-version: '3.8'
-    - run: python upload.py -s ${{ inputs.session-name }} -sh ${{ inputs.session-string }} -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f ${{ inputs.file-path }}
+    - run: python upload.py -s ${{ inputs.session-name }} -sh ${{ inputs.session-string }} -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f ${{ inputs.file-path }} -m ${{ inputs.message }}
