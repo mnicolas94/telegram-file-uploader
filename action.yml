@@ -32,5 +32,5 @@ runs:
     - uses: actions/setup-python@v3
       with:
         python-version: '3.8'
-    - run: python upload.py -s ${{ inputs.session-name }} -sh ${{ inputs.session-string }} -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f ${{ inputs.file-path }} -m ${{ inputs.message }}
+    - run: python ${{ github.action_path }}/upload.py -s ${{ inputs.session-name }} -sh ${{ inputs.session-string }} -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f ${{ inputs.file-path }} -m ${{ inputs.message }}
       shell: bash
