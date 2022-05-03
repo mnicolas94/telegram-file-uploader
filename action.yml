@@ -1,0 +1,35 @@
+name: 'Telegram file upload'
+description: 'Send a file to Telegram with MTProto API'
+inputs:
+  session-name:
+    description: 'App session name'
+    required: true
+  session-string:
+    description: 'App session string'
+    required: true
+  api-id:
+    description: 'App api id'
+    required: true
+  api-hash:
+    description: 'App api hash'
+    required: true
+  bot-token:
+    description: 'Token of the bot tha will send the file'
+    required: true
+  chat-id:
+    description: 'Id of the chat to send the file'
+    required: true
+  file-path:
+    description: 'Path of the file to send'
+    required: true
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-id }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+    - run: python upload.py -s ${{ inputs.session-name }} -sh ${{ inputs.session-string }} -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f ${{ inputs.file-path }}
