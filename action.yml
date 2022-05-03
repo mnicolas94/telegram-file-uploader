@@ -22,10 +22,6 @@ inputs:
   file-path:
     description: 'Path of the file to send'
     required: true
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
 runs:
   using: "composite"
   steps:
