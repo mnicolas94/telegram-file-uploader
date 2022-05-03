@@ -18,7 +18,6 @@ def parse_arguments():
 async def send_document(app, chat_id, file_path, message):
     async with app:
         await app.send_document(chat_id=chat_id, document=file_path, caption=message)
-        print(await app.export_session_string())
 
 
 if __name__ == '__main__':
