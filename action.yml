@@ -87,7 +87,7 @@ runs:
       shell: bash
 
     - name: Cache session
-      if: ${{ inputs.cache-session }}
+      if: ${{ inputs.cache-session == 'true' }}
       uses: actions/cache@v3
       with:
         path: ${{ github.action_path }}/${{ inputs.session-name }}.session
