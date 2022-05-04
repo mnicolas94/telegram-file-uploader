@@ -74,6 +74,7 @@ async def main():
                 print("ERROR")
         # else:
         #     print("not sending message...")
+        print("ERROR")
 
 
 if __name__ == '__main__':
