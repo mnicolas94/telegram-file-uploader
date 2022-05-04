@@ -4,9 +4,6 @@ inputs:
   session-name:
     description: 'App session name'
     required: true
-  session-string:
-    description: 'App session string'
-    required: true
   api-id:
     description: 'App api id'
     required: true
@@ -14,7 +11,7 @@ inputs:
     description: 'App api hash'
     required: true
   bot-token:
-    description: 'Token of the bot tha will send the file'
+    description: 'Token of the bot that will send the file'
     required: true
   chat-id:
     description: 'Id of the chat to send the file'
@@ -26,6 +23,18 @@ inputs:
     description: 'Optional message to send with the file'
     required: false
     default: ''
+  cache-session:
+    description: 'Whether or not to cache the session data'
+    required: false
+    default: 'false'
+  wait-for-permission-time:
+    description: 'Time to wait for a reply message when requesting permission'
+    required: false
+    default: '300'
+  reply-request:
+    description: 'Request message for a reply when asking for permission'
+    required: false
+    default: 'Please, reply to this message in order to give me permission to send you the file.'
 runs:
   using: "composite"
   steps:
@@ -39,12 +48,47 @@ runs:
         tempdir=$(mktemp --directory --tmpdir=. --suffix=-telegram-file-upload-action)
         cp ${{ github.action_path }}/**requirements.txt $tempdir
         echo "::set-output name=directory::${tempdir}"
-    - uses: actions/setup-python@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v3
       with:
         python-version: '3.8'
         cache: 'pip'
         cache-dependency-path: ${{ steps.copy-requirements.outputs.directory }}/**requirements.txt
-    - run: pip install -U -r ${{ steps.copy-requirements.outputs.directory }}/requirements.txt
+
+    - name: Install python dependencies
+      run: pip install -U -r ${{ steps.copy-requirements.outputs.directory }}/requirements.txt
       shell: bash
-    - run: python ${{ github.action_path }}/upload.py -s "${{ inputs.session-name }}" -sh ${{ inputs.session-string }} -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f "${{ inputs.file-path }}" -m "${{ inputs.message }}"
+
+    - name: Try to send the file
+      id: sendfile
+      run: |
+        output=$(python ${{ github.action_path }}/upload.py \
+          -s "${{ inputs.session-name }}" -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} \
+          -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f "${{ inputs.file-path }}" -m "${{ inputs.message }}")
+        echo "::set-output name=output::$output"
       shell: bash
+
+    - name: Send reply request if couldn't send file
+      if: ${{ steps.sendfile.outputs.output == 'ERROR' }}
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ inputs.chat-id }}
+        token: ${{ inputs.bot-token }}
+        message: ${{ inputs.reply-request }}
+
+    - name: Wait for permission and send file
+      if: ${{ steps.sendfile.outputs.output == 'ERROR' }}
+      run: |
+        output=$(python ${{ github.action_path }}/upload.py \
+          -s "${{ inputs.session-name }}" -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} \
+          -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f "${{ inputs.file-path }}" -m "${{ inputs.message }}" \
+          --wait-permission --wait-time ${{ inputs.wait-for-permission-time }})
+      shell: bash
+
+    - name: Cache session
+      if: ${{ inputs.cache-session }}
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.action_path }}/${{ inputs.session-name }}.session
+        key: ${{ inputs.session-name }}-${{ inputs.api-id }}-${{ inputs.api-hash }}-${{ inputs.bot-token }}
