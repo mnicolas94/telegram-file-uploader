@@ -60,6 +60,13 @@ runs:
       run: pip install -U -r ${{ steps.copy-requirements.outputs.directory }}/requirements.txt
       shell: bash
 
+    - name: Cache session
+      if: ${{ inputs.cache-session == 'true' }}
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.action_path }}/${{ inputs.session-name }}.session
+        key: ${{ inputs.session-name }}-${{ inputs.api-id }}-${{ inputs.api-hash }}-${{ inputs.bot-token }}
+
     - name: Try to send the file
       id: sendfile
       run: |
@@ -85,10 +92,3 @@ runs:
           -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f "${{ inputs.file-path }}" -m "${{ inputs.message }}" \
           --wait-permission --wait-time ${{ inputs.wait-for-permission-time }})
       shell: bash
-
-    - name: Cache session
-      if: ${{ inputs.cache-session == 'true' }}
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.action_path }}/${{ inputs.session-name }}.session
-        key: ${{ inputs.session-name }}-${{ inputs.api-id }}-${{ inputs.api-hash }}-${{ inputs.bot-token }}
