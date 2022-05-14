@@ -27,7 +27,7 @@ steps:
 
 * bot-token: the token of the bot that will send the file.
 
-* chat-id: the chat id you want to send the file.
+* chat-id: the chat id you want to send the file to.
 
 * file-path: the file's path you want to send.
 
