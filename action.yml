@@ -97,6 +97,7 @@ runs:
         cd ${{ github.action_path }}
         ls
         cd ..
+        ls
         cd ${{ steps.copy-requirements.outputs.directory }}
         ls
       shell: bash
