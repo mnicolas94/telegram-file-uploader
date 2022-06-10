@@ -60,27 +60,6 @@ runs:
       run: pip install -U -r ${{ steps.copy-requirements.outputs.directory }}/requirements.txt
       shell: bash
 
-    - name: check if session exists
-      run: |
-        echo "********"
-        cd ${{ github.action_path }}
-        ls .
-      shell: bash
-
-    - name: Cache session
-      if: ${{ inputs.cache-session == 'true' }}
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.action_path }}/${{ inputs.session-name }}.session
-        key: ${{ inputs.session-name }}-${{ inputs.api-id }}-${{ inputs.api-hash }}-${{ inputs.bot-token }}
-
-    - name: check if session exists again
-      run: |
-        echo "********"
-        cd ${{ github.action_path }}
-        ls .
-      shell: bash
-
     - name: Try to send the file
       id: sendfile
       run: |
@@ -88,18 +67,6 @@ runs:
           -s "${{ inputs.session-name }}" -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} \
           -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f "${{ inputs.file-path }}" -m "${{ inputs.message }}")
         echo "::set-output name=output::$output"
-      shell: bash
-
-    - name: check if session exists again X2
-      run: |
-        ls
-        echo "********"
-        cd ${{ github.action_path }}
-        ls
-        cd ..
-        ls
-        cd ${{ steps.copy-requirements.outputs.directory }}
-        ls
       shell: bash
 
     - name: Send reply request if couldn't send file
