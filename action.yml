@@ -66,6 +66,7 @@ runs:
         echo "********"
         cd ${{ github.action_path }}
         ls .
+      shell: bash
 
     - name: Cache session
       if: ${{ inputs.cache-session == 'true' }}
