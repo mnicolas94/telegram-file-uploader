@@ -90,6 +90,17 @@ runs:
         echo "::set-output name=output::$output"
       shell: bash
 
+    - name: check if session exists again X2
+      run: |
+        ls
+        echo "********"
+        cd ${{ github.action_path }}
+        ls
+        cd ..
+        cd ${{ steps.copy-requirements.outputs.directory }}
+        ls
+      shell: bash
+
     - name: Send reply request if couldn't send file
       if: ${{ steps.sendfile.outputs.output == 'ERROR' }}
       uses: appleboy/telegram-action@master
