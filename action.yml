@@ -60,6 +60,13 @@ runs:
       run: pip install -U -r ${{ steps.copy-requirements.outputs.directory }}/requirements.txt
       shell: bash
 
+    - name: check if session exists
+      run: |
+        ls
+        echo "********"
+        cd ${{ github.action_path }}
+        ls .
+
     - name: Cache session
       if: ${{ inputs.cache-session == 'true' }}
       uses: actions/cache@v3
