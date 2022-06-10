@@ -62,7 +62,6 @@ runs:
 
     - name: check if session exists
       run: |
-        ls
         echo "********"
         cd ${{ github.action_path }}
         ls .
@@ -74,6 +73,13 @@ runs:
       with:
         path: ${{ github.action_path }}/${{ inputs.session-name }}.session
         key: ${{ inputs.session-name }}-${{ inputs.api-id }}-${{ inputs.api-hash }}-${{ inputs.bot-token }}
+
+    - name: check if session exists again
+      run: |
+        echo "********"
+        cd ${{ github.action_path }}
+        ls .
+      shell: bash
 
     - name: Try to send the file
       id: sendfile
