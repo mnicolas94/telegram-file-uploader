@@ -47,7 +47,7 @@ runs:
         # issue https://github.com/actions/setup-python/issues/361
         tempdir=$(mktemp --directory --tmpdir=. --suffix=-telegram-file-upload-action)
         cp ${{ github.action_path }}/**requirements.txt $tempdir
-        echo "::set-output name=directory::${tempdir}"
+        echo "directory=$tempdir" >> $GITHUB_OUTPUT
 
     - name: Setup Python
       uses: actions/setup-python@v3
@@ -66,7 +66,7 @@ runs:
         output=$(python ${{ github.action_path }}/upload.py \
           -s "${{ inputs.session-name }}" -ai ${{ inputs.api-id }} -ah ${{ inputs.api-hash }} \
           -t ${{ inputs.bot-token }} -ch ${{ inputs.chat-id }} -f "${{ inputs.file-path }}" -m "${{ inputs.message }}")
-        echo "::set-output name=output::$output"
+        echo "output=$output" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Send reply request if couldn't send file
