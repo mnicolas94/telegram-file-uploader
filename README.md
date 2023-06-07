@@ -19,7 +19,7 @@ steps:
 ```
 # Input variables
 
-* session-name: the name for the Pyrogram session. Could be anythin, but should be always the same for the same use case.
+* session-name: the name for the Pyrogram session. Could be anything, but should be always the same for the same use case.
 
 * api-id: id of your telegram app. Visit https://my.telegram.org/apps to get one. More info in [Pyrogram setup](https://docs.pyrogram.org/start/setup).
 
