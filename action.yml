@@ -52,7 +52,7 @@ runs:
     - name: Setup Python
       uses: actions/setup-python@v3
       with:
-        python-version: '3.8'
+        python-version: '3.8.13'
         cache: 'pip'
         cache-dependency-path: ${{ steps.copy-requirements.outputs.directory }}/**requirements.txt
 
